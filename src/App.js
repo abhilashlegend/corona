@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import StateFilter from './StateFilter';
 import DistrictFilter from './DistrictFilter';
@@ -273,12 +272,12 @@ class Content extends React.Component {
           </div> 
           <div className="row mt-1"> 
               <div className="col-sm-12">
-                  <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active" id="graph-tab" data-toggle="tab" href="#graph" role="tab" aria-controls="graph" aria-selected="true">Graph</a>
+                  <ul className="nav nav-tabs" id="myTab" role="tablist">
+                    <li className="nav-item">
+                      <a className="nav-link active" id="graph-tab" data-toggle="tab" href="#graph" role="tab" aria-controls="graph" aria-selected="true">Graph</a>
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" id="table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">Table</a>
+                    <li className="nav-item">
+                      <a className="nav-link" id="table-tab" data-toggle="tab" href="#table" role="tab" aria-controls="table" aria-selected="false">Table</a>
                     </li>
                     
                   </ul>
@@ -287,8 +286,8 @@ class Content extends React.Component {
           </div>
           <div className="row mt-5">
             <div className="col-sm-12">
-              <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="graph" role="tabpanel" aria-labelledby="home-tab">
+              <div className="tab-content" id="myTabContent">
+                <div className="tab-pane fade show active" id="graph" role="tabpanel" aria-labelledby="home-tab">
 
                     <BarChart
                       districts={this.state.districts} 
@@ -303,7 +302,7 @@ class Content extends React.Component {
                      />  
 
                 </div>
-                <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="profile-tab">
+                <div className="tab-pane fade" id="table" role="tabpanel" aria-labelledby="profile-tab">
                      <Table
                       data={this.state.districtsData}
                        districts={this.state.districts}

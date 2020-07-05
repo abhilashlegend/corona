@@ -6,8 +6,6 @@ class Table extends React.Component
 {
 	constructor(props) {
 		super(props);
-		this.renderRows = this.renderRows.bind(this);
-		
 	}
 
 	renderRows() {
@@ -20,7 +18,7 @@ class Table extends React.Component
 		var output = [];
 
 		for(var i = 0; i < districts.length; i++) {
-			output.push(<TableRow 
+			output.push(<TableRow key={i}
 				district={districts[i]}
 				confirmed={confirmed[i]}
 				active={active[i]}
