@@ -9,6 +9,7 @@ import DistrictStat from './DistrictStat';
 import BarChart from './BarChart';
 import Table from './Table';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 class App extends React.Component {
   render() {
@@ -34,11 +35,20 @@ class Content extends React.Component {
   constructor(props) {
     super(props);
 
+    const cookies = new Cookies();
+
+    var cstate = cookies.get('cstate');
+    var dstate = cookies.get('dstate');
+
+    cstate = (typeof cstate === 'undefined') ? 'Karnataka' : cstate;
+    dstate = (typeof dstate === 'undefined') ? 'Dharwad' : dstate;
+
+
     this.state = {
       districts: [],
       districtsData: [],
-      defaultState : "Karnataka",
-      defaultDistrict: "Dharwad",
+      defaultState : cstate,
+      defaultDistrict: dstate,
       districtConfirmedCases: 0,
       districtActiveCases: 0,
       districtDeceasedCases: 0,
@@ -66,17 +76,22 @@ class Content extends React.Component {
 
   changeState(e) {
     var state;
+    const cookies = new Cookies();
      if(e.target.name == "state") {
        state = e.target.value
         this.setState({ defaultState: state, defaultDistrict: '' });
+        cookies.set('cstate', e.target.value, { path: '/' });
       }
       else if(e.target.name == "district"){
         this.setState({ defaultState: this.state.defaultState, defaultDistrict: e.target.value })
+        cookies.set('dstate', e.target.value, { path: '/' });
       }
       else {
         this.setState({ defaultState: this.state.defaultState,
           defaultDistrict: this.state.defaultDistrict
         })
+        cookies.set('cstate', this.state.defaultState, { path: '/' });
+        cookies.set('dstate', this.state.defaultDistrict, { path: '/' });
       }
    
     this.getDataFromApi();
@@ -165,7 +180,8 @@ class Content extends React.Component {
            return a + b;
          });
 
-
+         const cookies = new Cookies();
+         cookies.set('cstate',this.state.defaultState, { path: '/' });
 
          this.setState({
              districts: dists, 
@@ -192,6 +208,13 @@ class Content extends React.Component {
 
 
         },() => {
+          if(this.state.defaultDistrict === '') {
+              cookies.set('dstate', dists[0], { path: '/' });
+          } else {
+            cookies.set('dstate', this.state.defaultDistrict, { path: '/' });
+          }
+          
+          
            var confirmedCases = data[this.state.defaultState]["districtData"][this.state.defaultDistrict]["confirmed"];
             var activeCases = data[this.state.defaultState]["districtData"][this.state.defaultDistrict]["active"];
             var deceasedCases = data[this.state.defaultState]["districtData"][this.state.defaultDistrict]["deceased"];
