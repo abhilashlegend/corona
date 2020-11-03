@@ -1,13 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
-
+import ReactDOM from 'react-dom';
+import { DataTable } from 'react-data-components'
+import 'react-data-components/css/table-twbs.css';
+import './Table.css';
 
 class Table extends React.Component
 {
-	constructor(props) {
-		super(props);
-	}
-
 	renderRows() {
 		var districts = this.props.districts;
 		var confirmed = this.props.confirmedCases;
@@ -32,35 +30,46 @@ class Table extends React.Component
 	}
 
 	render() {
+
+		const data = [];
+
+		for(let i = 0; i < this.props.districts.length; i++) {	
+			data.push({
+				id: i,
+				district: this.props.districts[i],
+				confirmed: this.props.confirmedCases[i],
+				active: this.props.activeCases[i],
+				deceased: this.props.deceasedCases[i],
+				recovered: this.props.recoveredCases[i]
+			})
+		}
+
+
+
+		const tableColumns = [
+			{ title: 'District', prop: 'district' },
+			{ title: 'Confirmed', prop: 'confirmed' },
+			{ title: 'Active', prop: 'active'},
+			{ title: 'Deceased', prop: 'deceased' },
+			{ title: 'Recovered', prop: 'recovered' }
+		]
 		
 		
 		return (
-			<div className="table-responsive">
-				<table className="table table-hover">
-				  <thead className="thead-dark">
-				    <tr>
-				      <th scope="col">District</th>
-				      <th scope="col">Confirmed</th>
-				      <th scope="col">Active</th>
-				      <th scope="col">Deceased</th>
-				      <th scope="col">Recovered</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-				  	{this.renderRows() }
-				  </tbody>
-				</table>  
-
-			</div>		
+			<DataTable
+      className="container"
+      keys="id"
+      columns={tableColumns}
+      initialData={data}
+      initialPageLength={5}
+      initialSortBy={{ prop: 'district', order: 'ascending' }}
+      pageLengthOptions={[ 5, 20, 50 ]}
+    />	
 		)
 	}
 }
 
 class TableRow extends React.Component {
-
-	constructor(props) {
-		super(props);
-	}
 
 	render() {
 		return (

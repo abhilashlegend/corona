@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import StateFilter from './StateFilter';
 import DistrictFilter from './DistrictFilter';
-import Filter from './Filter';
 import IndiaStat from './IndiaStat';
 import StateStat from './StateStat';
 import DistrictStat from './DistrictStat'; 
@@ -68,7 +67,8 @@ class Content extends React.Component {
       stateTotalConfirmedCases: 0,
       stateTotalActiveCases: 0,
       stateTotalDeceasedCases: 0,
-      stateTotalRecoveredCases: 0
+      stateTotalRecoveredCases: 0,
+      loading: false
     }
 
     this.changeState = this.changeState.bind(this);
@@ -77,12 +77,12 @@ class Content extends React.Component {
   changeState(e) {
     var state;
     const cookies = new Cookies();
-     if(e.target.name == "state") {
+     if(e.target.name === "state") {
        state = e.target.value
         this.setState({ defaultState: state, defaultDistrict: '' });
         cookies.set('cstate', e.target.value, { path: '/' });
       }
-      else if(e.target.name == "district"){
+      else if(e.target.name === "district"){
         this.setState({ defaultState: this.state.defaultState, defaultDistrict: e.target.value })
         cookies.set('dstate', e.target.value, { path: '/' });
       }
@@ -98,6 +98,7 @@ class Content extends React.Component {
   }
 
   getDataForIndia() {
+      this.setState({loading: true});
       const url = 'https://api.rootnet.in/covid19-in/stats/latest';
       axios.get(url).then(response => response.data)
       .then((data) => {
@@ -110,13 +111,15 @@ class Content extends React.Component {
           indiaTotalConfirmedCases:  indiaConfirmed,
           indiaTotalActiveCases: indiaActive,
           indiaTotalDeceasedCases: indiaDeceased,
-          indiaTotalRecoveredCases: indiaRecovered
+          indiaTotalRecoveredCases: indiaRecovered,
+          loading: false
         })
       });
   }
 
 
   getDataFromApi() {
+      this.setState({loading: true});
       const url = 'https://api.covid19india.org/state_district_wise.json';
       axios.get(url).then(response => response.data)
       .then((data) => {
@@ -131,7 +134,7 @@ class Content extends React.Component {
         var districtsRecoveredBgColor = [];
 
         var dists = [];
-        if(this.state.defaultDistrict != '') {
+        if(this.state.defaultDistrict !== '') {
          
             var confirmedCases = data[this.state.defaultState]["districtData"][this.state.defaultDistrict]["confirmed"];
             var activeCases = data[this.state.defaultState]["districtData"][this.state.defaultDistrict]["active"];
@@ -202,6 +205,7 @@ class Content extends React.Component {
              stateTotalActiveCases: totalStateActiveCases,
              stateTotalDeceasedCases: totalStateDeceasedCases,
              stateTotalRecoveredCases: totalStateRecoveredCases,
+             loading: false,
              ...(!dists.includes(this.state.defaultDistrict) && {
       defaultDistrict: dists[0]
    })
@@ -238,6 +242,8 @@ class Content extends React.Component {
   render() {
     return (
       <div className="container-fluid">
+        { this.state.loading ?  <div className="spinner"></div> : null }
+       
           <div className="row mt-5">
               <div className="col-sm-4 v-center pt-3 text-center">
                   
